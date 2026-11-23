@@ -20,6 +20,10 @@ export PREFER_HOST_MODE="${PREFER_HOST_MODE:-hostname}"
 export NACOS_CONSOLE_PORT="${PORT:-8080}"
 export NACOS_APPLICATION_PORT="${NACOS_APPLICATION_PORT:-8848}"
 export TIME_ZONE="${TIME_ZONE:-UTC}"
+# Standalone Nacos keeps its embedded Raft groups (persistent naming data) under /home/nacos/data with the
+# member address baked in. Railway gives the container a new IP on every deploy, which would orphan those
+# groups ("did not find the Leader node"), so pin the single member to loopback.
+export NACOS_SERVER_IP="${NACOS_SERVER_IP:-127.0.0.1}"
 
 # Sized for a 1 GB Railway service (the image's own defaults are a 1 GB heap alone).
 # Nacos needs about 600 MB RSS at idle (JVM + 5 embedded RocksDB/JRaft groups), so 0.5 GB is too small.
