@@ -21,10 +21,12 @@ export NACOS_CONSOLE_PORT="${PORT:-8080}"
 export NACOS_APPLICATION_PORT="${NACOS_APPLICATION_PORT:-8848}"
 export TIME_ZONE="${TIME_ZONE:-UTC}"
 
-# Sized for a 0.5 GB Railway service (the image's own defaults are a 1 GB heap).
-# Raise NACOS_JVM_XMX (and the service's RAM) for real traffic.
+# Sized for a 1 GB Railway service (the image's own defaults are a 1 GB heap alone).
+# Nacos needs about 600 MB RSS at idle (JVM + 5 embedded RocksDB/JRaft groups), so 0.5 GB is too small.
+# Raise NACOS_JVM_XMX together with the service's RAM for real traffic.
+export MALLOC_ARENA_MAX="${MALLOC_ARENA_MAX:-2}"
 export JVM_XMS="${NACOS_JVM_XMS:-128m}"
-export JVM_XMX="${NACOS_JVM_XMX:-224m}"
+export JVM_XMX="${NACOS_JVM_XMX:-256m}"
 export JVM_XMN="${NACOS_JVM_XMN:-64m}"
 export JAVA_OPT="${JAVA_OPT:-} -XX:+UseSerialGC -XX:MaxMetaspaceSize=${NACOS_JVM_MMS:-160m} -XX:ReservedCodeCacheSize=64m -Xss512k -XX:MaxDirectMemorySize=64m -XX:ActiveProcessorCount=${NACOS_JVM_CPUS:-2} -XX:TieredStopAtLevel=1 -XX:+ExitOnOutOfMemoryError -Duser.timezone=${TIME_ZONE}"
 
