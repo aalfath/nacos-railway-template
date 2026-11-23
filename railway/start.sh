@@ -21,11 +21,12 @@ export NACOS_CONSOLE_PORT="${PORT:-8080}"
 export NACOS_APPLICATION_PORT="${NACOS_APPLICATION_PORT:-8848}"
 export TIME_ZONE="${TIME_ZONE:-UTC}"
 
-# Sized for a 0.5 GB Railway service; raise JVM_XMX (and the service's RAM) for real traffic.
-export JVM_XMS="${JVM_XMS:-160m}"
-export JVM_XMX="${JVM_XMX:-224m}"
-export JVM_XMN="${JVM_XMN:-64m}"
-export JAVA_OPT="${JAVA_OPT:-} -XX:+UseSerialGC -XX:MaxMetaspaceSize=${JVM_MMS:-192m} -XX:ReservedCodeCacheSize=64m -Xss512k -XX:MaxDirectMemorySize=64m -XX:ActiveProcessorCount=${JVM_CPUS:-2} -XX:+ExitOnOutOfMemoryError -Duser.timezone=${TIME_ZONE}"
+# Sized for a 0.5 GB Railway service (the image's own defaults are a 1 GB heap).
+# Raise NACOS_JVM_XMX (and the service's RAM) for real traffic.
+export JVM_XMS="${NACOS_JVM_XMS:-128m}"
+export JVM_XMX="${NACOS_JVM_XMX:-224m}"
+export JVM_XMN="${NACOS_JVM_XMN:-64m}"
+export JAVA_OPT="${JAVA_OPT:-} -XX:+UseSerialGC -XX:MaxMetaspaceSize=${NACOS_JVM_MMS:-160m} -XX:ReservedCodeCacheSize=64m -Xss512k -XX:MaxDirectMemorySize=64m -XX:ActiveProcessorCount=${NACOS_JVM_CPUS:-2} -XX:TieredStopAtLevel=1 -XX:+ExitOnOutOfMemoryError -Duser.timezone=${TIME_ZONE}"
 
 BASE=/home/nacos
 CP="$BASE/railway:$BASE/plugins/mysql-connector-j-8.2.0.jar:$(ls $BASE/railway/spring-security-crypto-*.jar):$(ls $BASE/railway/commons-logging-*.jar)"
